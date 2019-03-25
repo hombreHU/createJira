@@ -24,5 +24,10 @@ done'''
         sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-service.yaml'
       }
     }
+    stage('import DB') {
+      steps {
+        sh 'cat /Data/jenkins/sql/dbexport.pgsql | /Data/jenkins/kubectl exec -i postgres -- psql -U postgres -d jiradb'
+      }
+    }
   }
 }
