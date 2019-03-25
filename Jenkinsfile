@@ -21,6 +21,7 @@ do
 echo "- Still creating... -"
 sleep 30
 done'''
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-service.yaml'
       }
     }
   }
