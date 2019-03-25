@@ -12,5 +12,16 @@ pipeline {
         sh 'rm -rf /Data/jenkins/bck/var; rm /Data/jenkins/bck/*xml'
       }
     }
+    stage('create PostgreSQL') {
+      steps {
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-claim.yaml'
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-pod.yaml'
+        sh '''while [ `/Data/jenkins/kubectl get po | grep postgres | grep Running | wc -l` -eq 0 ]
+do
+echo "- Still creating... -"
+sleep 30
+done'''
+      }
+    }
   }
 }
