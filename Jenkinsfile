@@ -59,6 +59,26 @@ sed "s/PGIP/`echo $PGIP`/g" /Data/jenkins/sql/dbconfig.template > /Data/jenkins/
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "tar zxvf /tmp/avatars.tar.gz -C /var/atlassian/application-data/jira/data"'
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown -R daemon:daemon /var/atlassian/application-data/jira/data/avatars"'
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "rm /tmp/avatars.tar.gz"'
+        sh '/Data/jenkins/kubectl delete -f /Data/jenkins/jira-pod.yaml'
+        sh '''until [ `/Data/jenkins/kubectl get po | grep jira | wc -l` -eq 0 ]
+do
+echo "- Still deleting... -"
+
+sleep 15
+done'''
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/jira-pod.yaml'
+        sh '''while [ `/Data/jenkins/kubectl get po | grep jira | grep Running | wc -l` -eq 0 ]
+do
+echo "- Still creating... -"
+
+sleep 15
+done'''
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/jira-service.yaml'
+        sh '''until [ `/Data/jenkins/kubectl get svc | grep jira | grep pending | wc -l` -eq 0 ]
+do
+echo "- Still Creating -"
+sleep 7
+done'''
       }
     }
   }
