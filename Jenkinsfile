@@ -30,5 +30,16 @@ done'''
         sh '/Data/jenkins/kubectl cp /Data/jenkins/sql/title.sql postgres:/tmp;/Data/jenkins/kubectl exec -it postgres -- bash -c "psql -U postgres -d jiradb < /tmp/title.sql"  '
       }
     }
+    stage('create Jira') {
+      steps {
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/jira-claim.yaml'
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-pod.yaml'
+        sh '''while [ `/Data/jenkins/kubectl get po | grep jira | grep Running | wc -l` -eq 0 ]
+do
+echo "- Still creating... -"
+sleep 30
+done'''
+      }
+    }
   }
 }
