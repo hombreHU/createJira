@@ -51,6 +51,14 @@ sed "s/PGIP/`echo $PGIP`/g" /Data/jenkins/sql/dbconfig.template > /Data/jenkins/
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "tar zxvf /tmp/tempo.tar.gz -C /var/atlassian/application-data/jira/plugins/installed-plugins"'
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown -R daemon:daemon /var/atlassian/application-data/jira/plugins/installed-plugins"'
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "rm /tmp/tempo.tar.gz"'
+        sh '/Data/jenkins/kubectl cp /Data/jenkins/bck/attachments.tar.gz jira:/tmp'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "tar zxvf /tmp/attachments.tar.gz -C /var/atlassian/application-data/jira/data"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown -R daemon:daemon /var/atlassian/application-data/jira/data/attachments"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "rm /tmp/attachments.tar.gz"'
+        sh '/Data/jenkins/kubectl cp /Data/jenkins/bck/avatars.tar.gz jira:/tmp'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "tar zxvf /tmp/avatars.tar.gz -C /var/atlassian/application-data/jira/data"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown -R daemon:daemon /var/atlassian/application-data/jira/data/avatars"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "rm /tmp/avatars.tar.gz"'
       }
     }
   }
