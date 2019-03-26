@@ -41,5 +41,17 @@ sleep 30
 done'''
       }
     }
+    stage('setup Jira') {
+      steps {
+        sh '''PGIP=`/Data/jenkins/kubectl describe svc postgres | grep Ingres | cut -d" " -f3- | sed -e \'s/^[ \\t]*//\'`
+sed "s/PGIP/`echo $PGIP`/g" /Data/jenkins/sql/dbconfig.template > Data/jenkins/sql/dbconfig.xml'''
+        sh '/Data/jenkins/kubectl cp /Data/jenkins/sql/dbconfig.xml jira:/var/atlassian/application-data/jira/'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown daemon:daemon /var/atlassian/application-data/jira/dbconfig.xml"'
+        sh '/Data/jenkins/kubectl cp /Data/jenkins/tempo.tar.gz jira:/tmp'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "tar zxvf /tmp/tempo.tar.gz -C /var/atlassian/application-data/jira/plugins/installed-plugins"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown -R daemon:daemon /var/atlassian/application-data/jira/plugins/installed-plugins"'
+        sh '/Data/jenkins/kubectl exec -it jira -- bash -c "rm /tmp/tempo.tar.gz"'
+      }
+    }
   }
 }
