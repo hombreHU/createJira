@@ -33,7 +33,7 @@ done'''
     stage('create Jira') {
       steps {
         sh '/Data/jenkins/kubectl create -f /Data/jenkins/jira-claim.yaml'
-        sh '/Data/jenkins/kubectl create -f /Data/jenkins/postgres-pod.yaml'
+        sh '/Data/jenkins/kubectl create -f /Data/jenkins/jira-pod.yaml'
         sh '''while [ `/Data/jenkins/kubectl get po | grep jira | grep Running | wc -l` -eq 0 ]
 do
 echo "- Still creating... -"
