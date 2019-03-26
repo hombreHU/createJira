@@ -44,7 +44,7 @@ done'''
     stage('setup Jira') {
       steps {
         sh '''PGIP=`/Data/jenkins/kubectl describe svc postgres | grep Ingres | cut -d" " -f3- | sed -e \'s/^[ \\t]*//\'`
-sed "s/PGIP/`echo $PGIP`/g" /Data/jenkins/sql/dbconfig.template > Data/jenkins/sql/dbconfig.xml'''
+sed "s/PGIP/`echo $PGIP`/g" /Data/jenkins/sql/dbconfig.template > /Data/jenkins/sql/dbconfig.xml'''
         sh '/Data/jenkins/kubectl cp /Data/jenkins/sql/dbconfig.xml jira:/var/atlassian/application-data/jira/'
         sh '/Data/jenkins/kubectl exec -it jira -- bash -c "chown daemon:daemon /var/atlassian/application-data/jira/dbconfig.xml"'
         sh '/Data/jenkins/kubectl cp /Data/jenkins/tempo.tar.gz jira:/tmp'
