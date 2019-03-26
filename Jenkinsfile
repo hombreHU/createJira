@@ -27,6 +27,7 @@ done'''
     stage('import DB') {
       steps {
         sh 'cat /Data/jenkins/sql/dbexport.pgsql | /Data/jenkins/kubectl exec -i postgres -- psql -U postgres -d jiradb'
+        sh '/Data/jenkins/kubectl cp /Data/jenkins/sql/title.sql postgres:/tmpl;/Data/jenkins/kubectl exec -it postgres -- bash -c "psql -U postgres -d jiradb < /tmp/title.sql"  '
       }
     }
   }
